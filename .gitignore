@@ -1,0 +1,72 @@
+# OS / Editor
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+.history/
+
+*.pt
+figures/
+# Python bytecode / caches
+__pycache__/
+*.py[cod]
+*$py.class
+.pytest_cache/
+.cache/
+
+# Jupyter
+.ipynb_checkpoints/
+
+# Virtual environments
+.env
+.venv/
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
+.python-version
+
+# Packaging / build
+build/
+dist/
+downloads/
+eggs/
+.eggs/
+*.egg-info/
+*.egg
+sdist/
+lib/
+lib64/
+share/python-wheels/
+pip-wheel-metadata/
+pip-log.txt
+pip-delete-this-directory.txt
+MANIFEST
+
+# Coverage / testing
+.coverage
+.coverage.*
+coverage.xml
+nosetests.xml
+pytestdebug.log
+htmlcov/
+.tox/
+.nox/
+
+# Logs / outputs
+*.log
+logs/
+outputs/
+runs/
+checkpoints/
+models/
+
+# Notebooks exports
+*.nbconvert.ipynb
+
+# Graphviz caches
+*.gv.pdf
+*.gv.png
+*.gv.svg
+

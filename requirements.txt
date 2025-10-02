@@ -1,0 +1,19 @@
+# Core Python libs used across chapters (keep light; install PyTorch per platform)
+numpy>=1.24
+tqdm>=4.66
+tensorboard>=2.13
+graphviz>=0.20
+typing-extensions>=4.8
+
+# Optional extras used in the code examples
+matplotlib>=3.7
+fastapi>=0.110
+pydantic>=2
+streamlit>=1.33
+
+# IMPORTANT: Install PyTorch following instructions for your OS/GPU:
+# https://pytorch.org/get-started/locally/
+# For a CPU-only install (example):
+# torch>=2.2; sys_platform == 'darwin' or sys_platform == 'linux'
+# For Apple Silicon with MPS (example):
+# pip install torch==2.3.1 --extra-index-url https://download.pytorch.org/whl/cpu
