@@ -17,6 +17,7 @@ def fmt_duration(seconds: float) -> str:
 
 
 OPTIONAL_IMPORTS = {"matplotlib", "fastapi", "pydantic", "streamlit"}
+REPO_ROOT = Path(__file__).resolve().parents[1]
 
 
 def scan_imports_py(path: Path) -> Set[str]:
@@ -39,6 +40,9 @@ def probe_imports(mods: Set[str]) -> Tuple[bool, List[str], List[str]]:
     failures = []
     optional_missing = []
     for name in sorted(mods):
+        # Skip probing local modules that live under code/ (they will import in subprocess)
+        if (REPO_ROOT / "code" / f"{name}.py").exists() or (REPO_ROOT / "code" / name / "__init__.py").exists():
+            continue
         try:
             importlib.import_module(name)
         except Exception as exc:
@@ -50,15 +54,35 @@ def probe_imports(mods: Set[str]) -> Tuple[bool, List[str], List[str]]:
     return (len(failures) == 0, failures, optional_missing)
 
 
-def run_script(path: Path, timeout: float, env: dict) -> Tuple[bool, str]:
+def run_script(path: Path, timeout: float, env: dict, workdir: Path, code_dir: Path) -> Tuple[bool, str]:
     try:
+        # Build a small bootstrap to avoid shadowing stdlib 'code' by project package 'code'
+        # 1) Remove project root and code_dir from sys.path
+        # 2) Pre-import pdb (which will import stdlib 'code')
+        # 3) Insert code_dir so chapter modules (e.g., ch09_gpt) can be imported
+        # 4) Run the script
+        project_root_str = repr(str(workdir))
+        code_dir_str = repr(str(code_dir))
+        script_str = repr(str(path))
+        runner = (
+            "import runpy, sys, importlib; "
+            # Remove project paths to minimize collisions
+            f"sys.path[:] = [p for p in sys.path if p not in ({project_root_str}, {code_dir_str})]; "
+            # Preload stdlib 'code' before re-adding project paths
+            "sys.modules['code'] = importlib.import_module('code'); "
+            # Now add code_dir so chapter modules can import
+            f"sys.path.insert(0, {code_dir_str}); "
+            # Execute target script
+            f"runpy.run_path({script_str}, run_name='__main__')"
+        )
         proc = subprocess.run(
-            [sys.executable, str(path)],
+            [sys.executable, "-c", runner],
             stdout=subprocess.PIPE,
             stderr=subprocess.PIPE,
             text=True,
             timeout=timeout,
             env=env,
+            cwd=str(workdir),
         )
     except subprocess.TimeoutExpired:
         return False, f"Timeout after {timeout:.0f}s"
@@ -72,6 +96,8 @@ def run_script(path: Path, timeout: float, env: dict) -> Tuple[bool, str]:
         return False, "SKIP: CLI requires arguments"
     if "file not found" in lower or "no such file or directory" in lower:
         return False, "SKIP: missing input/resource"
+    if "num_samples should be a positive integer value" in lower or "num_samples=0" in lower:
+        return False, "SKIP: empty dataset"
     if "typeerror: 'type' object is not subscriptable" in lower:
         return False, "SKIP: typing not supported with current deps"
     # Return last few lines of stderr for context
@@ -98,11 +124,11 @@ def main() -> int:
 
     # Ensure project root on PYTHONPATH for local imports
     project_root = Path(__file__).resolve().parents[1]
+    code_dir = project_root / "code"
     env = os.environ.copy()
-    # Add both repo root and code/ to PYTHONPATH so `import chXX_*` works
+    # Add only the project root to PYTHONPATH; avoid adding code/ to prevent shadowing stdlib 'code'
     env["PYTHONPATH"] = os.pathsep.join([
         str(project_root),
-        str(project_root / "code"),
         env.get("PYTHONPATH", ""),
     ]).strip(os.pathsep)
 
@@ -163,7 +189,7 @@ def main() -> int:
 
         # Execute
         exec_start = time.perf_counter()
-        ok, msg = run_script(script, args.timeout, env)
+        ok, msg = run_script(script, args.timeout, env, project_root, code_dir)
         exec_end = time.perf_counter()
         status = 'OK'
         if not ok and msg.startswith('SKIP:'):

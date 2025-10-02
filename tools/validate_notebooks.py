@@ -6,7 +6,7 @@ import os
 import sys
 import time
 from pathlib import Path
-from typing import List, Set, Tuple
+from typing import List, Set, Tuple, Optional
 
 
 def fmt_duration(seconds: float) -> str:
@@ -49,10 +49,16 @@ def scan_imports_ipynb(path: Path) -> Set[str]:
 OPTIONAL_IMPORTS = {"matplotlib", "fastapi", "pydantic", "streamlit"}
 
 
+REPO_ROOT = Path(__file__).resolve().parents[1]
+
+
 def probe_imports(mods: Set[str]) -> Tuple[bool, List[str], List[str]]:
     failures = []
     optional_missing = []
     for name in sorted(mods):
+        # Skip probing local modules that live under code/ (they will import during execution)
+        if (REPO_ROOT / "code" / f"{name}.py").exists() or (REPO_ROOT / "code" / name / "__init__.py").exists():
+            continue
         try:
             importlib.import_module(name)
         except Exception as exc:
@@ -64,7 +70,7 @@ def probe_imports(mods: Set[str]) -> Tuple[bool, List[str], List[str]]:
     return (len(failures) == 0, failures, optional_missing)
 
 
-def execute_notebook(path: Path, timeout: float, kernel_name: str | None = None) -> Tuple[bool, str]:
+def execute_notebook(path: Path, timeout: float, kernel_name: Optional[str] = None) -> Tuple[bool, str]:
     try:
         import nbformat  # type: ignore
         from nbclient import NotebookClient  # type: ignore
@@ -116,11 +122,10 @@ def main() -> int:
         print("No notebooks found.")
         return 0
 
-    # Ensure project root on PYTHONPATH for local imports
+    # Ensure project root on PYTHONPATH for local imports; avoid adding code/ to prevent shadowing stdlib 'code'
     project_root = Path(__file__).resolve().parents[1]
     os.environ["PYTHONPATH"] = os.pathsep.join([
         str(project_root),
-        str(project_root / "code"),
         os.environ.get("PYTHONPATH", ""),
     ]).strip(os.pathsep)
 

@@ -68,6 +68,31 @@ pip install -r requirements.txt
 pip install nbclient nbformat
 ```
 
+## Python Version
+
+- Recommended: Python 3.11. This repo is tested with 3.11 and avoids edge cases seen with newer versions.
+- If you encounter errors like: `AttributeError: module 'code' has no attribute 'InteractiveConsole'` (often on Python 3.13), use Python 3.11 for now. The project’s `code/` package name can shadow the stdlib module named `code` under some setups.
+
+Quick ways to create a 3.11 venv
+
+- macOS (Homebrew):
+
+```
+brew install python@3.11
+/opt/homebrew/bin/python3.11 -m venv .venv
+source .venv/bin/activate
+pip install -r requirements.txt
+```
+
+- pyenv:
+
+```
+pyenv install 3.11.9
+~/.pyenv/versions/3.11.9/bin/python -m venv .venv
+source .venv/bin/activate
+pip install -r requirements.txt
+```
+
 ## Validating Everything Runs
 
 - Validate all Python scripts under `code/`:

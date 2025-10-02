@@ -5,8 +5,6 @@ Thumbs.db
 .vscode/
 .history/
 
-*.pt
-figures/
 # Python bytecode / caches
 __pycache__/
 *.py[cod]
@@ -61,6 +59,7 @@ outputs/
 runs/
 checkpoints/
 models/
+*.pt
 
 # Notebooks exports
 *.nbconvert.ipynb
@@ -70,3 +69,5 @@ models/
 *.gv.png
 *.gv.svg
 
+# Generated figures (copied from book repo)
+figures/
