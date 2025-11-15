@@ -1,3 +1,12 @@
+"""
+Building a Large Language Model from Scratch
+— A Step-by-Step Guide Using Python and PyTorch
+
+(c) Dr. Yves J. Hilpisch (The Python Quants GmbH)
+AI-Powered by GPT-5.
+
+"""
+
 from __future__ import annotations
 
 from collections import Counter
@@ -20,6 +29,7 @@ class Vocab:
         min_freq: int = 1,
         specials: Iterable[str] = ("<PAD>", "<UNK>"),
     ) -> "Vocab":
+        # Count incoming tokens and prepend special ids
         counter = Counter(tokens)
         id_to_token = list(specials)
         for tok, freq in counter.most_common():
@@ -65,19 +75,24 @@ class SimpleTokenizer:
         return out
 
     @classmethod
-    def from_file(cls, path: str | Path, level: str = "char", min_freq: int = 1) -> "SimpleTokenizer":
+    def from_file(
+        cls, path: str | Path, level: str = "char", min_freq: int = 1
+    ) -> "SimpleTokenizer":
+        # Load raw text and construct vocab directly
         text = Path(path).read_text(encoding="utf-8")
         tokens = cls._split(text, level)
         vocab = Vocab.build(tokens, min_freq=min_freq)
         return cls(vocab=vocab, level=level)
 
     def encode(self, text: str) -> List[int]:
+        # Map tokens to ids with unk fallback
         ids: List[int] = []
         for tok in self._split(text, self.level):
             ids.append(self.vocab.token_to_id.get(tok, self.unk))
         return ids
 
     def decode(self, ids: Iterable[int]) -> str:
+        # Convert back to tokens while skipping padding tokens
         toks: List[str] = []
         for i in ids:
             if 0 <= i < len(self.vocab.id_to_token):

@@ -1,9 +1,17 @@
-from __future__ import annotations
+"""
+Building a Large Language Model from Scratch
+— A Step-by-Step Guide Using Python and PyTorch
 
-"""Generate a toy BPE merges visualization as an SVG timeline.
+(c) Dr. Yves J. Hilpisch (The Python Quants GmbH)
+AI-Powered by GPT-5.
+
+Generate a toy BPE merges visualization as an SVG timeline.
 
 Writes figures/appx-bpe-merges.svg without external deps.
 """
+
+from __future__ import annotations
+
 
 from pathlib import Path
 

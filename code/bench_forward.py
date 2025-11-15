@@ -1,10 +1,18 @@
-from __future__ import annotations
+"""
+Building a Large Language Model from Scratch
+— A Step-by-Step Guide Using Python and PyTorch
 
-"""Measure forward-only tokens/sec for a tiny GPT.
+(c) Dr. Yves J. Hilpisch (The Python Quants GmbH)
+AI-Powered by GPT-5.
+
+Measure forward-only tokens/sec for a tiny GPT.
 
 Usage:
   python code/bench_forward.py --device auto --batch 8 --block 128 --vocab 256
 """
+
+from __future__ import annotations
+
 
 import argparse
 from pathlib import Path
@@ -35,10 +43,15 @@ def main() -> None:
     p.add_argument("--steps", type=int, default=20)
     args = p.parse_args()
 
+    # Resolve device string lazily for portable benchmarking
     device = auto_device() if args.device == "auto" else args.device
     cfg = GPTConfig(vocab_size=args.vocab, block_size=args.block)
+    # Keep the model tiny to highlight kernel overheads
     model = GPT(cfg).to(device).eval()
-    x = torch.randint(0, cfg.vocab_size, (args.batch, cfg.block_size), device=device)
+    # Synthetic token batch to avoid disk access
+    x = torch.randint(
+        0, cfg.vocab_size, (args.batch, cfg.block_size), device=device
+    )
 
     # Warmup
     for _ in range(args.warmup):
@@ -61,4 +74,3 @@ def main() -> None:
 
 if __name__ == "__main__":
     main()
-

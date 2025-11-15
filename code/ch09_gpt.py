@@ -1,6 +1,12 @@
 from __future__ import annotations
 
 """
+Building a Large Language Model from Scratch
+— A Step-by-Step Guide Using Python and PyTorch
+
+(c) Dr. Yves J. Hilpisch (The Python Quants GmbH)
+AI-Powered by GPT-5.
+
 GPT assembly: token/position embeddings, a stack of Transformer blocks,
 and a language‑model head. Kept small and readable to align with the book’s
 step‑by‑step narrative.

@@ -1,10 +1,18 @@
-from __future__ import annotations
+"""
+Building a Large Language Model from Scratch
+— A Step-by-Step Guide Using Python and PyTorch
 
-"""Learning-rate schedule helpers (Chapter 13).
+(c) Dr. Yves J. Hilpisch (The Python Quants GmbH)
+AI-Powered by GPT-5.
+
+Learning-rate schedule helpers (Chapter 13).
 
 Includes a warmup+cosine decay schedule implemented via PyTorch's LambdaLR.
 The schedule scales the base LR by a factor in [min_ratio, 1].
 """
+
+from __future__ import annotations
+
 
 import math
 from typing import Optional

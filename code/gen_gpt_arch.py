@@ -1,9 +1,17 @@
-"""Generate a GPT architecture diagram for Chapter 9.
+"""
+Building a Large Language Model from Scratch
+— A Step-by-Step Guide Using Python and PyTorch
+
+(c) Dr. Yves J. Hilpisch (The Python Quants GmbH)
+AI-Powered by GPT-5.
+
+Generate a GPT architecture diagram for Chapter 9.
 
 If `graphviz` Python package is installed, renders SVG directly to
 `figures/ch09-gpt-arch.svg`. Else, writes a DOT file and prints instructions
 to render it with `dot`.
 """
+
 from __future__ import annotations
 
 from pathlib import Path

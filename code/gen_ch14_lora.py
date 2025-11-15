@@ -1,9 +1,17 @@
-from __future__ import annotations
+"""
+Building a Large Language Model from Scratch
+— A Step-by-Step Guide Using Python and PyTorch
 
-"""Generate a simple LoRA diagram: base Linear plus low-rank delta.
+(c) Dr. Yves J. Hilpisch (The Python Quants GmbH)
+AI-Powered by GPT-5.
+
+Generate a simple LoRA diagram: base Linear plus low-rank delta.
 
 Writes figures/ch14-lora.svg without external dependencies.
 """
+
+from __future__ import annotations
+
 
 from pathlib import Path
 

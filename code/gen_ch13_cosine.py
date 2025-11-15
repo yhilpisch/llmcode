@@ -1,10 +1,18 @@
-from __future__ import annotations
+"""
+Building a Large Language Model from Scratch
+— A Step-by-Step Guide Using Python and PyTorch
 
-"""Draw warmup + cosine LR schedule used in Chapter 13.
+(c) Dr. Yves J. Hilpisch (The Python Quants GmbH)
+AI-Powered by GPT-5.
+
+Draw warmup + cosine LR schedule used in Chapter 13.
 
 Writes figures/ch13-lr-cosine.svg. Falls back to minimal SVG if Matplotlib
 is unavailable.
 """
+
+from __future__ import annotations
+
 
 from pathlib import Path
 

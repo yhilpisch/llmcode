@@ -1,4 +1,11 @@
-"""Self-contained example workspace and sample texts.
+"""
+Building a Large Language Model from Scratch
+— A Step-by-Step Guide Using Python and PyTorch
+
+(c) Dr. Yves J. Hilpisch (The Python Quants GmbH)
+AI-Powered by GPT-5.
+
+Self-contained example workspace and sample texts.
 
 Use this when readers don't have the book repo. It creates a temporary
 folder in the current working directory, fills it with small sample
@@ -15,6 +22,7 @@ Usage (Python):
       print(ws.root)  # use ws.root / files inside
       ...
 """
+
 from __future__ import annotations
 
 import argparse

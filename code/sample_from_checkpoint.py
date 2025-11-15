@@ -1,6 +1,11 @@
-from __future__ import annotations
+"""
+Building a Large Language Model from Scratch
+— A Step-by-Step Guide Using Python and PyTorch
 
-"""Sample text from a trained checkpoint (Chapter 11 companion CLI).
+(c) Dr. Yves J. Hilpisch (The Python Quants GmbH)
+AI-Powered by GPT-5.
+
+Sample text from a trained checkpoint (Chapter 11 companion CLI).
 
 This script reconstructs the GPT model saved by Chapter 10's trainer and
 generates a short continuation from a prompt. It is byte-level by default so
@@ -8,9 +13,7 @@ you can sample without extra tokenizer files.
 
 Examples
 --------
-(.venv) $ python code/sample_from_checkpoint.py \
-  --ckpt checkpoints/ch10_gpt.pt --prompt "Philosophy is" \
-  --max-new-tokens 120 --temperature 0.9 --top-p 0.95
+(.venv) $ python code/sample_from_checkpoint.py   --ckpt checkpoints/ch10_gpt.pt --prompt "Philosophy is"   --max-new-tokens 120 --temperature 0.9 --top-p 0.95
 
 Notes
 -----
@@ -18,6 +21,9 @@ Notes
   compatible with your vocabulary or adapt this script to encode/decode with
   that tokenizer.
 """
+
+from __future__ import annotations
+
 
 import argparse
 import sys

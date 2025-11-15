@@ -1,6 +1,15 @@
+"""
+Building a Large Language Model from Scratch
+— A Step-by-Step Guide Using Python and PyTorch
+
+(c) Dr. Yves J. Hilpisch (The Python Quants GmbH)
+AI-Powered by GPT-5.
+
+Validate a model bundle by loading it and sampling once.
+"""
+
 from __future__ import annotations
 
-"""Validate a model bundle by loading it and sampling once."""
 
 import argparse
 from pathlib import Path
@@ -34,24 +43,36 @@ def main() -> None:
     p.add_argument("--seed", type=int, default=0)
     args = p.parse_args()
 
+    # Make sampling deterministic and pick a device
     torch.manual_seed(args.seed)
     device = auto_device() if args.device == "auto" else args.device
     print({"device": device, "seed": args.seed})
 
+    # Load bundle, restore model and optional tokenizer
     b = torch.load(args.bundle, map_location=device)
     cfg = GPTConfig(**b["config"])  # type: ignore
-    model = GPT(cfg).to(device).eval(); model.load_state_dict(b["model_state"])  # type: ignore
+    model = GPT(cfg).to(device).eval()
+    model.load_state_dict(b["model_state"])  # type: ignore
     meta = b.get("tokenizer")
     tok = None
     if meta and meta.get("id_to_token"):
         id_to_token = list(meta["id_to_token"])  # ensure list
         token_to_id = {t: i for i, t in enumerate(id_to_token)}
-        vocab = Vocab(token_to_id=token_to_id, id_to_token=id_to_token,
-                     pad=int(meta.get("pad_id", 0)), unk=int(meta.get("unk_id", 1)))
+        vocab = Vocab(
+            token_to_id=token_to_id,
+            id_to_token=id_to_token,
+            pad=int(meta.get("pad_id", 0)),
+            unk=int(meta.get("unk_id", 1)),
+        )
         tok = SimpleTokenizer(vocab=vocab, level=meta.get("level", "char"))
 
     if tok is None:
-        ids = torch.tensor([[c for c in args.prompt.encode("utf-8")]], dtype=torch.long, device=device)
+        # Fallback to byte-level prompt if no tokenizer metadata exists
+        ids = torch.tensor(
+            [[c for c in args.prompt.encode("utf-8")]],
+            dtype=torch.long,
+            device=device,
+        )
         out = sample(
             model, ids,
             max_new_tokens=args.max_new_tokens,
@@ -61,7 +82,9 @@ def main() -> None:
         )
         text = bytes(out[0].tolist()).decode("utf-8", errors="ignore")
     else:
-        ids = torch.tensor([tok.encode(args.prompt)], dtype=torch.long, device=device)
+        ids = torch.tensor(
+            [tok.encode(args.prompt)], dtype=torch.long, device=device
+        )
         out = sample(
             model, ids,
             max_new_tokens=args.max_new_tokens,

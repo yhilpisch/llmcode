@@ -1,9 +1,17 @@
-from __future__ import annotations
+"""
+Building a Large Language Model from Scratch
+— A Step-by-Step Guide Using Python and PyTorch
 
-"""Quick demo: create a tiny random bundle and sample once.
+(c) Dr. Yves J. Hilpisch (The Python Quants GmbH)
+AI-Powered by GPT-5.
+
+Quick demo: create a tiny random bundle and sample once.
 
 This validates wiring without training or external files.
 """
+
+from __future__ import annotations
+
 
 import argparse
 from pathlib import Path

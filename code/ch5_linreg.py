@@ -1,8 +1,16 @@
-"""Minimal linear regression training in PyTorch (Chapter 5).
+"""
+Building a Large Language Model from Scratch
+— A Step-by-Step Guide Using Python and PyTorch
+
+(c) Dr. Yves J. Hilpisch (The Python Quants GmbH)
+AI-Powered by GPT-5.
+
+Minimal linear regression training in PyTorch (Chapter 5).
 
 Run:
   python code/ch5_linreg.py --device auto --epochs 400
 """
+
 from __future__ import annotations
 
 import argparse
@@ -29,10 +37,14 @@ class Config:
     device: str = "auto"  # cpu|cuda|mps|auto
 
 
-def make_data(cfg: Config, device: torch.device) -> tuple[torch.Tensor, torch.Tensor, torch.Tensor, torch.Tensor]:
+def make_data(
+    cfg: Config, device: torch.device
+) -> tuple[torch.Tensor, torch.Tensor, torch.Tensor, torch.Tensor]:
+    # Fix RNG for reproducibility across devices
     g = torch.Generator(device="cpu").manual_seed(cfg.seed)
     w_true = torch.tensor([2.0, -3.5])
     b_true = torch.tensor(0.5)
+    # Draw features and small Gaussian noise on target
     X = torch.randn(cfg.n, 2, generator=g).to(device)
     noise = 0.1 * torch.randn(cfg.n, generator=g).to(device)
     y = (X @ w_true.to(device)) + b_true.to(device) + noise
@@ -40,6 +52,7 @@ def make_data(cfg: Config, device: torch.device) -> tuple[torch.Tensor, torch.Te
 
 
 def train(cfg: Config) -> None:
+    # Pick device lazily to match user selection
     device = pick_device() if cfg.device == "auto" else torch.device(cfg.device)
     X, y, w_true, b_true = make_data(cfg, device)
 
@@ -48,6 +61,7 @@ def train(cfg: Config) -> None:
     loss_fn = torch.nn.MSELoss()
 
     for step in range(cfg.epochs + 1):
+        # Usual gradient-descent step: zero, forward, loss, backward, update
         opt.zero_grad()
         pred = model(X).squeeze(-1)
         loss = loss_fn(pred, y)
@@ -74,4 +88,3 @@ def parse_args() -> Config:
 if __name__ == "__main__":
     cfg = parse_args()
     train(cfg)
-

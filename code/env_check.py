@@ -1,7 +1,15 @@
-"""Minimal environment and device sanity check.
+"""
+Building a Large Language Model from Scratch
+— A Step-by-Step Guide Using Python and PyTorch
+
+(c) Dr. Yves J. Hilpisch (The Python Quants GmbH)
+AI-Powered by GPT-5.
+
+Minimal environment and device sanity check.
 
 Run with: python -m code.env_check
 """
+
 from __future__ import annotations
 
 import os
@@ -10,6 +18,7 @@ import sys
 
 
 def main() -> None:
+    # Show basic runtime information
     print("== Environment ==")
     print("Python:", platform.python_version())
     print("Platform:", platform.platform())
@@ -19,6 +28,7 @@ def main() -> None:
     try:
         import torch  # type: ignore
 
+        # Echo installed PyTorch version and device availability
         print("\n== PyTorch ==")
         print("torch:", torch.__version__)
         cuda = torch.cuda.is_available()
@@ -35,4 +45,3 @@ def main() -> None:
 
 if __name__ == "__main__":
     main()
-

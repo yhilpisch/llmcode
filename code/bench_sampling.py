@@ -1,10 +1,18 @@
-from __future__ import annotations
+"""
+Building a Large Language Model from Scratch
+— A Step-by-Step Guide Using Python and PyTorch
 
-"""Measure sampling tokens/sec for a tiny GPT.
+(c) Dr. Yves J. Hilpisch (The Python Quants GmbH)
+AI-Powered by GPT-5.
+
+Measure sampling tokens/sec for a tiny GPT.
 
 Usage:
   python code/bench_sampling.py --device auto --max-new-tokens 200
 """
+
+from __future__ import annotations
+
 
 import argparse
 from pathlib import Path
@@ -37,10 +45,14 @@ def main() -> None:
     p.add_argument("--top-p", type=float, default=0.0)
     args = p.parse_args()
 
+    # Choose device automatically unless explicitly set
     device = auto_device() if args.device == "auto" else args.device
     cfg = GPTConfig(vocab_size=args.vocab, block_size=args.block)
+    # Construct a tiny model and prompt to isolate sampling speed
     model = GPT(cfg).to(device).eval()
-    prompt = torch.randint(0, cfg.vocab_size, (1, min(8, args.block)), device=device)
+    prompt = torch.randint(
+        0, cfg.vocab_size, (1, min(8, args.block)), device=device
+    )
 
     t0 = time.time()
     out = sample(
@@ -55,7 +67,13 @@ def main() -> None:
         torch.cuda.synchronize()
     dt = time.time() - t0
     gen = out.size(1) - prompt.size(1)
-    print({"device": device, "gen_tokens": int(gen), "tokens_per_sec": round(gen / dt)})
+    print(
+        {
+            "device": device,
+            "gen_tokens": int(gen),
+            "tokens_per_sec": round(gen / dt),
+        }
+    )
 
 if __name__ == '__main__':
     main()

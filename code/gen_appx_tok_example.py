@@ -1,9 +1,17 @@
-from __future__ import annotations
+"""
+Building a Large Language Model from Scratch
+— A Step-by-Step Guide Using Python and PyTorch
 
-"""Generate a simple SVG illustrating char/word/BPE tokenization on one sentence.
+(c) Dr. Yves J. Hilpisch (The Python Quants GmbH)
+AI-Powered by GPT-5.
+
+Generate a simple SVG illustrating char/word/BPE tokenization on one sentence.
 
 Writes figures/appx-tok-example.svg using dependency-free SVG drawing.
 """
+
+from __future__ import annotations
+
 
 from pathlib import Path
 

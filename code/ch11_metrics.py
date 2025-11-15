@@ -1,11 +1,19 @@
-from __future__ import annotations
+"""
+Building a Large Language Model from Scratch
+— A Step-by-Step Guide Using Python and PyTorch
 
-"""Simple evaluation helpers for Chapter 11.
+(c) Dr. Yves J. Hilpisch (The Python Quants GmbH)
+AI-Powered by GPT-5.
+
+Simple evaluation helpers for Chapter 11.
 
 Perplexity is derived from average cross-entropy on a held-out set:
     PPL = exp(H)
 We compute mean loss over a DataLoader of (x, y) pairs.
 """
+
+from __future__ import annotations
+
 
 import math
 from typing import Iterable, Tuple

@@ -1,6 +1,11 @@
-from __future__ import annotations
+"""
+Building a Large Language Model from Scratch
+— A Step-by-Step Guide Using Python and PyTorch
 
-"""Quick corpus evaluator for Chapter 12.
+(c) Dr. Yves J. Hilpisch (The Python Quants GmbH)
+AI-Powered by GPT-5.
+
+Quick corpus evaluator for Chapter 12.
 
 Reads references and hypotheses from files (one example per line). The
 references file supports multiple references per example by separating them
@@ -9,6 +14,9 @@ lowercasing.
 
 Outputs BLEU (corpus), ROUGE-L, METEOR (simplified), and distinct-1/2.
 """
+
+from __future__ import annotations
+
 
 import argparse
 from pathlib import Path

@@ -1,6 +1,11 @@
-from __future__ import annotations
+"""
+Building a Large Language Model from Scratch
+— A Step-by-Step Guide Using Python and PyTorch
 
-"""Educational text metrics for Chapter 12.
+(c) Dr. Yves J. Hilpisch (The Python Quants GmbH)
+AI-Powered by GPT-5.
+
+Educational text metrics for Chapter 12.
 
 This module implements small, dependency‑free versions of common metrics:
 
@@ -14,6 +19,9 @@ Inputs are tokenized sequences (lists of strings or ints). We keep the
 implementations compact and readable for teaching; they are not drop‑in
 replacements for official packages, but align with the main ideas.
 """
+
+from __future__ import annotations
+
 
 from typing import Iterable, List, Sequence, Tuple
 from collections import Counter

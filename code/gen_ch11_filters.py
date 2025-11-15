@@ -1,9 +1,17 @@
-from __future__ import annotations
+"""
+Building a Large Language Model from Scratch
+— A Step-by-Step Guide Using Python and PyTorch
 
-"""Illustrate top-k and top-p filtering on a toy distribution.
+(c) Dr. Yves J. Hilpisch (The Python Quants GmbH)
+AI-Powered by GPT-5.
+
+Illustrate top-k and top-p filtering on a toy distribution.
 
 Writes figures/ch11-topfilt.svg. Matplotlib if available, else fallback SVG.
 """
+
+from __future__ import annotations
+
 
 from pathlib import Path
 

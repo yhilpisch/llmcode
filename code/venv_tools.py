@@ -1,9 +1,17 @@
-"""Virtual environment helpers used in Chapter 2.
+"""
+Building a Large Language Model from Scratch
+— A Step-by-Step Guide Using Python and PyTorch
+
+(c) Dr. Yves J. Hilpisch (The Python Quants GmbH)
+AI-Powered by GPT-5.
+
+Virtual environment helpers used in Chapter 2.
 
 Usage:
   python -m code.venv_tools info
   python -m code.venv_tools create .venv
 """
+
 from __future__ import annotations
 
 import os

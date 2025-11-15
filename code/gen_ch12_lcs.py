@@ -1,10 +1,18 @@
-from __future__ import annotations
+"""
+Building a Large Language Model from Scratch
+— A Step-by-Step Guide Using Python and PyTorch
 
-"""Draw an LCS alignment sketch for ROUGE-L intuition.
+(c) Dr. Yves J. Hilpisch (The Python Quants GmbH)
+AI-Powered by GPT-5.
+
+Draw an LCS alignment sketch for ROUGE-L intuition.
 
 Writes figures/ch12-lcs.svg with two token rows and highlighted matches.
 Falls back to simple SVG so the book always builds.
 """
+
+from __future__ import annotations
+
 
 from pathlib import Path
 

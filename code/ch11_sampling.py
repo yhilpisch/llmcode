@@ -1,10 +1,18 @@
-from __future__ import annotations
+"""
+Building a Large Language Model from Scratch
+— A Step-by-Step Guide Using Python and PyTorch
 
-"""Tiny sampling helpers (preview for Chapter 11).
+(c) Dr. Yves J. Hilpisch (The Python Quants GmbH)
+AI-Powered by GPT-5.
+
+Tiny sampling helpers (preview for Chapter 11).
 
 Functions here keep dependencies minimal and work directly with the GPT model
 from Chapter 9. They operate on integer token ids and return extended ids.
 """
+
+from __future__ import annotations
+
 
 from typing import Optional
 

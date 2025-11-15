@@ -148,7 +148,8 @@ This repository is provided "as is" for educational purposes. No warranties, gua
 
 ## Credits and License
 
-Scripts © Dr. Yves J. Hilpisch with GPT‑5. All rights reserved unless otherwise noted. See source files for per‑file notices where applicable.
+© Dr. Yves J. Hilpisch (The Python Quants GmbH). All rights reserved unless otherwise noted. See source files for per‑file notices where applicable.
+
 
 This repository is a companion to the book “Building a Large Language Model from Scratch — A Step‑by‑Step Guide Using Python and PyTorch”.
 

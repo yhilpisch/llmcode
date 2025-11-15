@@ -1,6 +1,11 @@
-from __future__ import annotations
+"""
+Building a Large Language Model from Scratch
+— A Step-by-Step Guide Using Python and PyTorch
 
-"""LoRA: Low-rank adapters for Linear layers (teaching version).
+(c) Dr. Yves J. Hilpisch (The Python Quants GmbH)
+AI-Powered by GPT-5.
+
+LoRA: Low-rank adapters for Linear layers (teaching version).
 
 This module provides a small, readable `LoRALinear` that adds a trainable
 low-rank delta to a frozen base weight:
@@ -9,6 +14,9 @@ low-rank delta to a frozen base weight:
 
 where A ∈ R^{r×d_in}, B ∈ R^{d_out×r}, and `scale = alpha / r`.
 """
+
+from __future__ import annotations
+
 
 import torch
 import torch.nn as nn

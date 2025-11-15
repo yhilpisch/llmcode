@@ -1,10 +1,18 @@
-"""Generate a simple LLM build roadmap diagram.
+"""
+Building a Large Language Model from Scratch
+— A Step-by-Step Guide Using Python and PyTorch
+
+(c) Dr. Yves J. Hilpisch (The Python Quants GmbH)
+AI-Powered by GPT-5.
+
+Generate a simple LLM build roadmap diagram.
 
 If `graphviz` Python package is installed, renders SVG directly.
 Else, writes `figures/llm-roadmap.dot` for manual rendering:
 
     dot -Tsvg figures/llm-roadmap.dot -o figures/llm-roadmap.svg
 """
+
 from __future__ import annotations
 
 from pathlib import Path

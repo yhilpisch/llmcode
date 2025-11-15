@@ -1,9 +1,17 @@
-from __future__ import annotations
+"""
+Building a Large Language Model from Scratch
+— A Step-by-Step Guide Using Python and PyTorch
 
-"""Generate a synthetic scaling law figure with axes and annotations.
+(c) Dr. Yves J. Hilpisch (The Python Quants GmbH)
+AI-Powered by GPT-5.
+
+Generate a synthetic scaling law figure with axes and annotations.
 
 Writes figures/ch14-scaling.svg (simple SVG; no external deps).
 """
+
+from __future__ import annotations
+
 
 from pathlib import Path
 import math

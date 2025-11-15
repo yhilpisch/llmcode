@@ -1,10 +1,18 @@
-from __future__ import annotations
+"""
+Building a Large Language Model from Scratch
+— A Step-by-Step Guide Using Python and PyTorch
 
-"""Generate causal and combined (padding x causal) mask heatmaps for Ch. 9.
+(c) Dr. Yves J. Hilpisch (The Python Quants GmbH)
+AI-Powered by GPT-5.
+
+Generate causal and combined (padding x causal) mask heatmaps for Ch. 9.
 
 Always writes `figures/ch09-masks.svg`. Uses Matplotlib if available; otherwise
 falls back to a minimal hand-written SVG so the book build never misses it.
 """
+
+from __future__ import annotations
+
 
 from pathlib import Path
 

@@ -1,14 +1,26 @@
 # Core Python libs used across chapters (keep light; install PyTorch per platform)
 numpy>=1.24
+psutil>=5.9
 tqdm>=4.66
 tensorboard>=2.13
-graphviz>=0.20
 typing-extensions>=4.8
 
-# Optional extras used in the code examples
+# Visualization & figure generation
 matplotlib>=3.7
+graphviz>=0.20
+
+# Notebook validation & tooling
+nbformat>=5.10
+nbclient>=0.9
+
+# Tokenization appendix extras
+tokenizers>=0.15
+sentencepiece>=0.1.99
+
+# Deployment extras (Chapter 15)
 fastapi>=0.110
 pydantic>=2
+uvicorn>=0.29
 streamlit>=1.33
 
 # IMPORTANT: Install PyTorch following instructions for your OS/GPU:

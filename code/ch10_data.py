@@ -1,6 +1,11 @@
-from __future__ import annotations
+"""
+Building a Large Language Model from Scratch
+— A Step-by-Step Guide Using Python and PyTorch
 
-"""Small data helpers for Chapter 10: building a token id stream and slicing
+(c) Dr. Yves J. Hilpisch (The Python Quants GmbH)
+AI-Powered by GPT-5.
+
+Small data helpers for Chapter 10: building a token id stream and slicing
 into (input, target) chunks for next-token prediction.
 
 We keep this self-contained and friendly:
@@ -8,6 +13,9 @@ We keep this self-contained and friendly:
 - Helpers to build ids from raw text using either a provided tokenizer or a
   byte-level fallback (0-255).
 """
+
+from __future__ import annotations
+
 
 from dataclasses import dataclass
 from pathlib import Path
@@ -41,15 +49,24 @@ def load_texts(paths: Sequence[str] | None) -> str:
         return "Hello world. Hello vectors.\n"
     texts: List[str] = []
     for p in paths:
+        # Read each file as UTF-8 and concatenate with newlines
         data = Path(p).read_text(encoding="utf-8")
         texts.append(data)
     return "\n".join(texts)
 
 
 def build_ids_byte_level(text: str) -> TextIds:
+    # Encode to bytes and map each byte directly to an id
     data = text.encode("utf-8", errors="ignore")
     ids = torch.tensor(list(data), dtype=torch.long)
-    return TextIds(ids=ids, vocab_size=256, pad_id=None, unk_id=None, level="byte", id_to_token=None)
+    return TextIds(
+        ids=ids,
+        vocab_size=256,
+        pad_id=None,
+        unk_id=None,
+        level="byte",
+        id_to_token=None,
+    )
 
 
 def build_ids_with_tokenizer(text: str, level: str = "char") -> TextIds:
@@ -66,8 +83,10 @@ def build_ids_with_tokenizer(text: str, level: str = "char") -> TextIds:
             from code.ch6_tokenize import SimpleTokenizer, Vocab  # type: ignore
         except Exception:
             return build_ids_byte_level(text)
-    if hasattr(SimpleTokenizer, 'from_text'):
-        tok = SimpleTokenizer.from_text(text, level=level)  # type: ignore[attr-defined]
+    if hasattr(SimpleTokenizer, "from_text"):
+        tok = SimpleTokenizer.from_text(  # type: ignore[attr-defined]
+            text, level=level
+        )
     else:
         # Build from raw text using the module's helpers
         tokens = SimpleTokenizer._split(text, level)

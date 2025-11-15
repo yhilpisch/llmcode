@@ -1,10 +1,18 @@
-from __future__ import annotations
+"""
+Building a Large Language Model from Scratch
+— A Step-by-Step Guide Using Python and PyTorch
 
-"""Generate a sliding-window schematic for Chapter 10.
+(c) Dr. Yves J. Hilpisch (The Python Quants GmbH)
+AI-Powered by GPT-5.
+
+Generate a sliding-window schematic for Chapter 10.
 
 Writes figures/ch10-windows.svg. Uses Matplotlib if available; otherwise
 falls back to a small hand-written SVG so the figure is always present.
 """
+
+from __future__ import annotations
+
 
 from pathlib import Path
 

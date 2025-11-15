@@ -1,10 +1,18 @@
-from __future__ import annotations
+"""
+Building a Large Language Model from Scratch
+— A Step-by-Step Guide Using Python and PyTorch
 
-"""Minimal sampling CLI over an exported bundle (Chapter 15).
+(c) Dr. Yves J. Hilpisch (The Python Quants GmbH)
+AI-Powered by GPT-5.
+
+Minimal sampling CLI over an exported bundle (Chapter 15).
 
 Usage:
   python code/ch15_cli.py --bundle model_bundle.pt --prompt "Hello"
 """
+
+from __future__ import annotations
+
 
 import argparse
 import sys

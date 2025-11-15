@@ -1,9 +1,17 @@
-from __future__ import annotations
+"""
+Building a Large Language Model from Scratch
+— A Step-by-Step Guide Using Python and PyTorch
 
-"""Visualize the effect of temperature on a toy logit vector.
+(c) Dr. Yves J. Hilpisch (The Python Quants GmbH)
+AI-Powered by GPT-5.
+
+Visualize the effect of temperature on a toy logit vector.
 
 Writes figures/ch11-temp.svg. Matplotlib if available, else fallback SVG.
 """
+
+from __future__ import annotations
+
 
 from pathlib import Path
 

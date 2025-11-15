@@ -1,10 +1,18 @@
-from __future__ import annotations
+"""
+Building a Large Language Model from Scratch
+— A Step-by-Step Guide Using Python and PyTorch
 
-"""Chapter 10: a compact training script for the GPT model.
+(c) Dr. Yves J. Hilpisch (The Python Quants GmbH)
+AI-Powered by GPT-5.
+
+Chapter 10: a compact training script for the GPT model.
 
 This keeps options small and readable. It supports either a byte-level build
 of token ids or the SimpleTokenizer from Chapter 6 if available.
 """
+
+from __future__ import annotations
+
 
 import argparse
 from dataclasses import asdict

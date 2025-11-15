@@ -1,6 +1,11 @@
-from __future__ import annotations
+"""
+Building a Large Language Model from Scratch
+— A Step-by-Step Guide Using Python and PyTorch
 
-"""Self-test: verify GPT forward shapes and mask broadcasting.
+(c) Dr. Yves J. Hilpisch (The Python Quants GmbH)
+AI-Powered by GPT-5.
+
+Self-test: verify GPT forward shapes and mask broadcasting.
 
 Runs a tiny forward pass and asserts expected tensor ranks/shapes for a
 minimal config. Use this as a quick wiring check during refactors.
@@ -8,6 +13,9 @@ minimal config. Use this as a quick wiring check during refactors.
 Usage:
   python code/gpt_shapes_selftest.py
 """
+
+from __future__ import annotations
+
 
 from pathlib import Path
 import sys

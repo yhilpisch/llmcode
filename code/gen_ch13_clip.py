@@ -1,10 +1,18 @@
-from __future__ import annotations
+"""
+Building a Large Language Model from Scratch
+— A Step-by-Step Guide Using Python and PyTorch
 
-"""Illustrate gradient-norm clipping with a synthetic curve.
+(c) Dr. Yves J. Hilpisch (The Python Quants GmbH)
+AI-Powered by GPT-5.
+
+Illustrate gradient-norm clipping with a synthetic curve.
 
 Writes figures/ch13-clip.svg. No Matplotlib dependency required; generates a
 simple SVG line for gradient norm and a horizontal clip threshold.
 """
+
+from __future__ import annotations
+
 
 from pathlib import Path
 import math

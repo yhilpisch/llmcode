@@ -1,10 +1,18 @@
-from __future__ import annotations
+"""
+Building a Large Language Model from Scratch
+— A Step-by-Step Guide Using Python and PyTorch
 
-"""Plot cumulative probability and nucleus threshold p.
+(c) Dr. Yves J. Hilpisch (The Python Quants GmbH)
+AI-Powered by GPT-5.
+
+Plot cumulative probability and nucleus threshold p.
 
 Writes figures/ch11-nucleus.svg. Uses Matplotlib if available; otherwise
 falls back to a minimal SVG line/area plot to ensure the book builds.
 """
+
+from __future__ import annotations
+
 
 from pathlib import Path
 

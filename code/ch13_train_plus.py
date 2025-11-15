@@ -1,6 +1,11 @@
-from __future__ import annotations
+"""
+Building a Large Language Model from Scratch
+— A Step-by-Step Guide Using Python and PyTorch
 
-"""Improved training loop with AMP, clipping, scheduling, and validation.
+(c) Dr. Yves J. Hilpisch (The Python Quants GmbH)
+AI-Powered by GPT-5.
+
+Improved training loop with AMP, clipping, scheduling, and validation.
 
 Chapter 13 builds on Chapter 10's trainer:
 - Optional AMP (mixed precision) for speed on GPU.
@@ -9,6 +14,9 @@ Chapter 13 builds on Chapter 10's trainer:
 - Gradient accumulation to simulate larger batches.
 - Train/val split and best-checkpoint saving.
 """
+
+from __future__ import annotations
+
 
 import argparse
 from dataclasses import asdict
