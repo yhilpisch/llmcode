@@ -3,7 +3,7 @@ Building a Large Language Model from Scratch
 — A Step-by-Step Guide Using Python and PyTorch
 
 (c) Dr. Yves J. Hilpisch (The Python Quants GmbH)
-AI-Powered by GPT-5.
+AI-powered by GPT-5.x.
 
 Quick demo: create a tiny random bundle and sample once.
 
@@ -33,7 +33,9 @@ def auto_device() -> str:
 
 
 def main() -> None:
-    p = argparse.ArgumentParser(description="Write a tiny random bundle and sample once")
+    p = argparse.ArgumentParser(
+        description="Write a tiny random bundle and sample once",
+    )
     p.add_argument("--out", default="model_bundle_demo.pt")
     p.add_argument("--prompt", default="Hello")
     p.add_argument("--max-new-tokens", type=int, default=40)
@@ -46,15 +48,31 @@ def main() -> None:
 
     torch.manual_seed(args.seed)
     device = auto_device() if args.device == "auto" else args.device
-    cfg = GPTConfig(vocab_size=256, block_size=64, d_model=64, n_head=4, n_layer=2, d_ff=128)
+    cfg = GPTConfig(
+        vocab_size=256,
+        block_size=64,
+        d_model=64,
+        n_head=4,
+        n_layer=2,
+        d_ff=128,
+    )
     model = GPT(cfg).to(device).eval()
-    bundle = {"config": cfg.__dict__, "model_state": model.state_dict(), "tokenizer": None}
+    bundle = {
+        "config": cfg.__dict__,
+        "model_state": model.state_dict(),
+        "tokenizer": None,
+    }
     torch.save(bundle, args.out)
     print("Wrote:", args.out)
 
-    ids = torch.tensor([[c for c in args.prompt.encode("utf-8")]], dtype=torch.long, device=device)
+    ids = torch.tensor(
+        [[c for c in args.prompt.encode("utf-8")]],
+        dtype=torch.long,
+        device=device,
+    )
     out = sample(
-        model, ids,
+        model,
+        ids,
         max_new_tokens=args.max_new_tokens,
         temperature=args.temperature,
         top_k=(args.top_k or None),

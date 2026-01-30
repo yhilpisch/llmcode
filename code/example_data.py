@@ -3,7 +3,7 @@ Building a Large Language Model from Scratch
 — A Step-by-Step Guide Using Python and PyTorch
 
 (c) Dr. Yves J. Hilpisch (The Python Quants GmbH)
-AI-Powered by GPT-5.
+AI-powered by GPT-5.x.
 
 Self-contained example workspace and sample texts.
 
@@ -98,7 +98,10 @@ def _cmd_create(args: argparse.Namespace) -> None:
     (ws.create_defaults())
     print(ws.root)
     if not args.keep:
-        print("(Temporary; will be cleaned up when used via context manager or explicitly)")
+        print(
+            "(Temporary; will be cleaned up when used via context manager "
+            "or explicitly)"
+        )
 
 
 def _cmd_path(_: argparse.Namespace) -> None:
@@ -132,7 +135,10 @@ def main(argv: list[str] | None = None) -> None:
     c.add_argument("--keep", action="store_true", help="do not auto-clean later")
     c.set_defaults(func=_cmd_create)
 
-    sub.add_parser("path", help="print last workspace path").set_defaults(func=_cmd_path)
+    sub.add_parser(
+        "path",
+        help="print last workspace path",
+    ).set_defaults(func=_cmd_path)
 
     d = sub.add_parser("cleanup", help="remove a workspace path")
     d.add_argument("path", help="path to workspace directory")
@@ -144,4 +150,3 @@ def main(argv: list[str] | None = None) -> None:
 
 if __name__ == "__main__":
     main()
-

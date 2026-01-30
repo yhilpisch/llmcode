@@ -7,7 +7,6 @@ typing-extensions>=4.8
 
 # Visualization & figure generation
 matplotlib>=3.7
-graphviz>=0.20
 
 # Notebook validation & tooling
 nbformat>=5.10

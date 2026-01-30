@@ -14,7 +14,38 @@ def fmt_duration(seconds: float) -> str:
         return f"{seconds:.2f}s"
     if seconds >= 1e-3:
         return f"{seconds * 1e3:.1f}ms"
-    return f"{seconds * 1e6:.1f}µs"
+    return f"{seconds * 1e6:.1f}us"
+
+
+def normalize_cell_ids(nb: "nbformat.NotebookNode") -> int:  # type: ignore[name-defined]
+    changed = 0
+    seen: Set[str] = set()
+    for i, cell in enumerate(nb.cells):
+        cid = cell.get("id")
+        if not cid or cid in seen:
+            new_id = f"cell-{i:04d}"
+            j = 0
+            candidate = new_id
+            while candidate in seen:
+                j += 1
+                candidate = f"{new_id}-{j}"
+            cell["id"] = candidate
+            changed += 1
+            cid = candidate
+        seen.add(str(cid))
+    return changed
+
+
+def check_line_lengths(nb: "nbformat.NotebookNode", max_len: int) -> List[Tuple[int, int]]:  # type: ignore[name-defined]
+    hits: List[Tuple[int, int]] = []
+    for idx, cell in enumerate(nb.cells):
+        if getattr(cell, "cell_type", None) != "code":
+            continue
+        source = cell.get("source", "") or ""
+        for ln, line in enumerate(str(source).splitlines(), start=1):
+            if len(line) > max_len:
+                hits.append((idx + 1, ln))
+    return hits
 
 
 def extract_imports_from_code(code: str) -> Set[str]:
@@ -131,8 +162,6 @@ def normalize_notebook(path: Path, nb: "nbformat.NotebookNode") -> Tuple[bool, O
     normalized_nb = nbformat.from_dict(normalized_dict)
     after = nbformat.writes(normalized_nb)
     changed = (before != after) or bool(changes)
-    if changed:
-        nbformat.write(normalized_nb, str(path))
     return True, normalized_nb, None, changed
 
 
@@ -147,10 +176,15 @@ def main() -> int:
     parser.add_argument("--timeout", type=float, default=300.0, help="Per-notebook execution timeout in seconds (default: 300)")
     parser.add_argument("--pattern", default="*.ipynb", help="Glob pattern for notebooks (default: *.ipynb)")
     parser.add_argument("--kernel", default=None, help="Kernel name to use (default: auto-detect)")
+    parser.add_argument("--max-len", type=int, default=85, help="Max line length for code cells (default: 85)")
     parser.add_argument("--fail-fast", action="store_true", help="Stop on first failure")
     parser.add_argument("--normalize", action="store_true", help="Normalize notebooks before validation")
+    parser.add_argument("--normalize-ids", action="store_true", help="Normalize missing/duplicate cell ids")
+    parser.add_argument("--write-normalized", action="store_true", help="Write normalized notebooks back in place")
     parser.add_argument("--execute", action="store_true", help="Execute notebooks after validation")
+    parser.add_argument("--skip-execute", action="store_true", help="Skip executing notebooks")
     args = parser.parse_args()
+    do_execute = args.execute and not args.skip_execute
 
     root = Path(args.path)
     if not root.exists():
@@ -194,13 +228,15 @@ def main() -> int:
             continue
         total_item_time = load_duration
 
-        # Normalize stage
+        # Normalize stage (nbformat)
+        norm_changed = False
         if args.normalize:
             n0 = time.perf_counter()
             norm_ok, nb_obj, norm_msg, changed = normalize_notebook(nb_path, nb_obj)
             n1 = time.perf_counter()
             total_item_time += n1 - n0
-            if norm_ok:
+            if norm_ok and nb_obj is not None:
+                norm_changed = changed
                 print_stage("Normalize", "OK", f"{fmt_duration(n1 - n0)}")
                 if changed:
                     print("    ↳ notebook normalized")
@@ -215,6 +251,33 @@ def main() -> int:
                 continue
         else:
             print_stage("Normalize", "SKIP", "disabled")
+
+        # Normalize cell ids
+        id_changes = 0
+        if args.normalize_ids and nb_obj is not None:
+            i0 = time.perf_counter()
+            id_changes = normalize_cell_ids(nb_obj)
+            i1 = time.perf_counter()
+            total_item_time += i1 - i0
+            if id_changes:
+                print_stage("NormIDs", "OK", f"{fmt_duration(i1 - i0)}")
+                print(f"    ↳ normalized {id_changes} cell id(s)")
+            else:
+                print_stage("NormIDs", "OK", f"{fmt_duration(i1 - i0)}")
+        else:
+            print_stage("NormIDs", "SKIP", "disabled")
+
+        # Write normalized notebook if requested
+        if args.write_normalized and nb_obj is not None and (norm_changed or id_changes):
+            try:
+                import nbformat  # type: ignore
+                nbformat.write(nb_obj, str(nb_path))
+                print("    ↳ wrote normalized notebook")
+            except Exception as exc:
+                failures += 1
+                print(f"    ↳ write failed: {type(exc).__name__}: {exc}")
+                if args.fail_fast:
+                    break
 
         # Structure validation (after potential normalization)
         s0 = time.perf_counter()
@@ -238,6 +301,24 @@ def main() -> int:
             print()
             continue
 
+        # Line-length check (code cells only)
+        l0 = time.perf_counter()
+        line_hits = check_line_lengths(nb_obj, args.max_len)
+        l1 = time.perf_counter()
+        total_item_time += l1 - l0
+        line_ok = len(line_hits) == 0
+        if line_ok:
+            print_stage("LineLen", "OK", fmt_duration(l1 - l0))
+        else:
+            preview = ", ".join([f"c{c}l{l}" for c, l in line_hits[:6]])
+            if len(line_hits) > 6:
+                preview += ", ..."
+            print_stage("LineLen", "FAIL", fmt_duration(l1 - l0))
+            print(f"    ↳ {len(line_hits)} long line(s) > {args.max_len} (e.g., {preview})")
+            failures += 1
+            if args.fail_fast:
+                break
+
         # Imports: scan and probe
         i0 = time.perf_counter()
         imports = scan_imports(nb_obj)
@@ -259,7 +340,7 @@ def main() -> int:
             break
 
         # Execute
-        if args.execute:
+        if do_execute:
             e0 = time.perf_counter()
             ok_exec, msg = execute_notebook(nb_obj, nb_path, args.timeout, kernel_name=args.kernel)
             e1 = time.perf_counter()

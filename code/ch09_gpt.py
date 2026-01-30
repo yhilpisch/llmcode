@@ -5,7 +5,7 @@ Building a Large Language Model from Scratch
 — A Step-by-Step Guide Using Python and PyTorch
 
 (c) Dr. Yves J. Hilpisch (The Python Quants GmbH)
-AI-Powered by GPT-5.
+AI-powered by GPT-5.x.
 
 GPT assembly: token/position embeddings, a stack of Transformer blocks,
 and a language‑model head. Kept small and readable to align with the book’s
@@ -75,7 +75,12 @@ class GPT(nn.Module):
     """A compact GPT‑style language model composed from Chapter 8 blocks.
 
     Forward signature:
-        logits, loss = model(input_ids, targets=None, attention_mask=None, pad_id=None)
+        logits, loss = model(
+            input_ids,
+            targets=None,
+            attention_mask=None,
+            pad_id=None,
+        )
     """
 
     def __init__(self, cfg: GPTConfig):

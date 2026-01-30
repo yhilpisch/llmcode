@@ -3,7 +3,7 @@ Building a Large Language Model from Scratch
 — A Step-by-Step Guide Using Python and PyTorch
 
 (c) Dr. Yves J. Hilpisch (The Python Quants GmbH)
-AI-Powered by GPT-5.
+AI-powered by GPT-5.x.
 
 Minimal sampling CLI over an exported bundle (Chapter 15).
 
@@ -44,7 +44,12 @@ def build_tokenizer(meta: dict | None):
         token_to_id = {t: i for i, t in enumerate(id_to_token)}
         pad_id = int(meta.get("pad_id", 0))
         unk_id = int(meta.get("unk_id", 1))
-        vocab = Vocab(token_to_id=token_to_id, id_to_token=id_to_token, pad=pad_id, unk=unk_id)
+        vocab = Vocab(
+            token_to_id=token_to_id,
+            id_to_token=id_to_token,
+            pad=pad_id,
+            unk=unk_id,
+        )
         return SimpleTokenizer(vocab=vocab, level=meta.get("level", "char"))
     except Exception:
         return None
@@ -73,7 +78,11 @@ def main() -> None:
 
     tok = build_tokenizer(b.get("tokenizer"))
     if tok is None:  # fall back to byte-level
-        ids = torch.tensor([[c for c in args.prompt.encode("utf-8")]], dtype=torch.long, device=device)
+        ids = torch.tensor(
+            [[c for c in args.prompt.encode("utf-8")]],
+            dtype=torch.long,
+            device=device,
+        )
         out = sample(
             model,
             ids,
@@ -84,7 +93,11 @@ def main() -> None:
         )
         print(bytes(out[0].tolist()).decode("utf-8", errors="ignore"))
     else:
-        ids = torch.tensor([tok.encode(args.prompt)], dtype=torch.long, device=device)
+        ids = torch.tensor(
+            [tok.encode(args.prompt)],
+            dtype=torch.long,
+            device=device,
+        )
         out = sample(
             model,
             ids,

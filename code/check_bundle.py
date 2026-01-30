@@ -3,7 +3,7 @@ Building a Large Language Model from Scratch
 — A Step-by-Step Guide Using Python and PyTorch
 
 (c) Dr. Yves J. Hilpisch (The Python Quants GmbH)
-AI-Powered by GPT-5.
+AI-powered by GPT-5.x.
 
 Validate a model bundle by loading it and sampling once.
 """
@@ -18,7 +18,7 @@ import torch
 
 sys.path.append(str(Path(__file__).resolve().parent))
 from ch09_gpt import GPT, GPTConfig  # type: ignore
-from ch11_sampling import sample      # type: ignore
+from ch11_sampling import sample  # type: ignore
 from ch6_tokenize import SimpleTokenizer, Vocab  # type: ignore
 
 

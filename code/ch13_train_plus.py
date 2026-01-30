@@ -3,7 +3,7 @@ Building a Large Language Model from Scratch
 — A Step-by-Step Guide Using Python and PyTorch
 
 (c) Dr. Yves J. Hilpisch (The Python Quants GmbH)
-AI-Powered by GPT-5.
+AI-powered by GPT-5.x.
 
 Improved training loop with AMP, clipping, scheduling, and validation.
 
@@ -84,8 +84,18 @@ def make_loaders(
         n_val = max(1, int(len(ds) * val_ratio))
         n_train = max(0, len(ds) - n_val)
         train_ds, val_ds = random_split(ds, [n_train, n_val])
-    train_dl = DataLoader(train_ds, batch_size=batch_size, shuffle=True, drop_last=True)
-    val_dl = DataLoader(val_ds, batch_size=batch_size, shuffle=False, drop_last=False)
+    train_dl = DataLoader(
+        train_ds,
+        batch_size=batch_size,
+        shuffle=True,
+        drop_last=True,
+    )
+    val_dl = DataLoader(
+        val_ds,
+        batch_size=batch_size,
+        shuffle=False,
+        drop_last=False,
+    )
     return train_dl, val_dl
 
 
@@ -98,8 +108,12 @@ def main() -> None:
     p.add_argument("--accum-steps", type=int, default=1, help="grad accumulation")
     p.add_argument("--steps", type=int, default=1000)
     p.add_argument("--val-ratio", type=float, default=0.05)
-    p.add_argument("--split", choices=["contiguous","random"], default="contiguous",
-                   help="how to split the id stream before windowing")
+    p.add_argument(
+        "--split",
+        choices=["contiguous", "random"],
+        default="contiguous",
+        help="how to split the id stream before windowing",
+    )
     p.add_argument(
         "--val-interval-steps",
         type=int,
@@ -114,7 +128,12 @@ def main() -> None:
     p.add_argument("--device", default="auto")
     p.add_argument("--seed", type=int, default=0)
     p.add_argument("--save", type=str, default="checkpoints/ch13_gpt_best.pt")
-    p.add_argument("--resume", type=str, default="", help="resume from checkpoint .pt")
+    p.add_argument(
+        "--resume",
+        type=str,
+        default="",
+        help="resume from checkpoint .pt",
+    )
     args = p.parse_args()
 
     print("[1/8] Seeding and device selection")
@@ -167,7 +186,12 @@ def main() -> None:
         model = GPT(cfg).to(device)
     print("[6/8] Optimizer, scheduler, AMP")
     opt = torch.optim.AdamW(model.parameters(), lr=args.lr)
-    sched = warmup_cosine_lr(opt, args.warmup_steps, args.steps, args.cosine_min_ratio)
+    sched = warmup_cosine_lr(
+        opt,
+        args.warmup_steps,
+        args.steps,
+        args.cosine_min_ratio,
+    )
     amp_enabled = (args.amp and device == "cuda")
     try:
         scaler = torch.amp.GradScaler("cuda", enabled=amp_enabled)  # torch>=2.4
@@ -193,7 +217,11 @@ def main() -> None:
                 B, T, V = logits.shape
                 lf = logits.detach().to("cpu", dtype=torch.float32).reshape(B*T, V)
                 yf = yb.detach().to("cpu", dtype=torch.long).reshape(B*T)
-                batch_loss = torch.nn.functional.cross_entropy(lf, yf, reduction="sum")
+                batch_loss = torch.nn.functional.cross_entropy(
+                    lf,
+                    yf,
+                    reduction="sum",
+                )
                 total_loss += float(batch_loss.item())
                 total_tokens += int(B*T)
         import math

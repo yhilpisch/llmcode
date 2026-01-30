@@ -3,7 +3,7 @@ Building a Large Language Model from Scratch
 — A Step-by-Step Guide Using Python and PyTorch
 
 (c) Dr. Yves J. Hilpisch (The Python Quants GmbH)
-AI-Powered by GPT-5.
+AI-powered by GPT-5.x.
 
 Quick corpus evaluator for Chapter 12.
 
@@ -49,10 +49,16 @@ def to_hyps(lines: List[str]) -> List[Sequence[str]]:
 
 
 def main() -> None:
-    p = argparse.ArgumentParser(description="Evaluate text outputs against references")
+    p = argparse.ArgumentParser(
+        description="Evaluate text outputs against references",
+    )
     p.add_argument("--refs", required=True, help="path to references.txt")
     p.add_argument("--hyps", required=True, help="path to hypotheses.txt")
-    p.add_argument("--lower", action="store_true", help="lowercase before tokenizing")
+    p.add_argument(
+        "--lower",
+        action="store_true",
+        help="lowercase before tokenizing",
+    )
     p.add_argument("--max-n", type=int, default=4, help="max n-gram for BLEU")
     args = p.parse_args()
 
@@ -80,4 +86,3 @@ def main() -> None:
 
 if __name__ == "__main__":
     main()
-

@@ -3,7 +3,7 @@ Building a Large Language Model from Scratch
 — A Step-by-Step Guide Using Python and PyTorch
 
 (c) Dr. Yves J. Hilpisch (The Python Quants GmbH)
-AI-Powered by GPT-5.
+AI-powered by GPT-5.x.
 
 Tiny sampling helpers (preview for Chapter 11).
 
@@ -25,7 +25,11 @@ def _top_k_filter(logits: torch.Tensor, k: int) -> torch.Tensor:
         return logits
     v, _ = torch.topk(logits, k)
     thresh = v[:, [-1]]
-    return torch.where(logits < thresh, torch.tensor(-1e9, device=logits.device), logits)
+    return torch.where(
+        logits < thresh,
+        torch.tensor(-1e9, device=logits.device),
+        logits,
+    )
 
 
 def _top_p_filter(logits: torch.Tensor, p: float) -> torch.Tensor:

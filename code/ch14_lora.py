@@ -3,7 +3,7 @@ Building a Large Language Model from Scratch
 — A Step-by-Step Guide Using Python and PyTorch
 
 (c) Dr. Yves J. Hilpisch (The Python Quants GmbH)
-AI-Powered by GPT-5.
+AI-powered by GPT-5.x.
 
 LoRA: Low-rank adapters for Linear layers (teaching version).
 
@@ -12,7 +12,7 @@ low-rank delta to a frozen base weight:
 
     y = x @ W^T + scale * x @ (B @ A)^T
 
-where A ∈ R^{r×d_in}, B ∈ R^{d_out×r}, and `scale = alpha / r`.
+where A in R^{rxd_in}, B in R^{d_outxr}, and `scale = alpha / r`.
 """
 
 from __future__ import annotations
@@ -43,11 +43,11 @@ class LoRALinear(nn.Module):
         self.r = int(r)
         self.alpha = float(alpha)
         self.scale = self.alpha / max(1, self.r)
-        # LoRA adapters (A: r×d_in, B: d_out×r)
+        # LoRA adapters (A: rxd_in, B: d_outxr)
         if self.r > 0:
             self.A = nn.Linear(d_in, self.r, bias=False)
             self.B = nn.Linear(self.r, d_out, bias=False)
-            # Init: A small, B zero so start as identity (delta≈0)
+            # Init: A small, B zero so start as identity (delta~0)
             nn.init.kaiming_uniform_(self.A.weight, a=2**0.5)
             nn.init.zeros_(self.B.weight)
             # Freeze base

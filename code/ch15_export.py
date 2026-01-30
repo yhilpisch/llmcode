@@ -3,12 +3,13 @@ Building a Large Language Model from Scratch
 — A Step-by-Step Guide Using Python and PyTorch
 
 (c) Dr. Yves J. Hilpisch (The Python Quants GmbH)
-AI-Powered by GPT-5.
+AI-powered by GPT-5.x.
 
 Export a clean model bundle with config, weights, and tokenizer metadata.
 
 Usage:
-  python code/ch15_export.py --ckpt checkpoints/ch13_gpt_best.pt --out model_bundle.pt
+  python code/ch15_export.py --ckpt checkpoints/ch13_gpt_best.pt \
+    --out model_bundle.pt
 """
 
 from __future__ import annotations
@@ -38,4 +39,3 @@ def main() -> None:
 
 if __name__ == "__main__":
     main()
-

@@ -3,7 +3,7 @@ Building a Large Language Model from Scratch
 — A Step-by-Step Guide Using Python and PyTorch
 
 (c) Dr. Yves J. Hilpisch (The Python Quants GmbH)
-AI-Powered by GPT-5.
+AI-powered by GPT-5.x.
 
 Virtual environment helpers used in Chapter 2.
 
@@ -26,7 +26,9 @@ def info() -> None:
     print("== Python & Environment ==")
     print("Executable:", sys.executable)
     print("Prefix:", sys.prefix)
-    venv = os.environ.get("VIRTUAL_ENV") or (".venv" if ".venv" in sys.executable else "")
+    venv = os.environ.get("VIRTUAL_ENV") or (
+        ".venv" if ".venv" in sys.executable else ""
+    )
     print("VIRTUAL_ENV:", venv or "(not active)")
     site_dirs = site.getsitepackages()
     sp = ", ".join(p for p in site_dirs if ".venv" in p) or ", ".join(site_dirs)

@@ -3,7 +3,7 @@ Building a Large Language Model from Scratch
 — A Step-by-Step Guide Using Python and PyTorch
 
 (c) Dr. Yves J. Hilpisch (The Python Quants GmbH)
-AI-Powered by GPT-5.
+AI-powered by GPT-5.x.
 
 Project code package (mirrors stdlib ``code`` attributes for compatibility).
 """
@@ -20,7 +20,10 @@ from typing import Any
 _STDLIB_MODULE: ModuleType | None = None
 
 def _load_stdlib_code() -> ModuleType | None:
-    """Load the standard library ``code`` module even though this package shadows it."""
+    """Load the standard library ``code`` module.
+
+    This avoids issues because this package shadows the stdlib name.
+    """
     try:
         stdlib_dir = sysconfig.get_paths().get("stdlib")
         if not stdlib_dir:
@@ -28,7 +31,10 @@ def _load_stdlib_code() -> ModuleType | None:
         stdlib_code_path = os.path.join(stdlib_dir, "code.py")
         if not os.path.exists(stdlib_code_path):
             return None
-        spec = importlib.util.spec_from_file_location("_stdlib_code", stdlib_code_path)
+        spec = importlib.util.spec_from_file_location(
+            "_stdlib_code",
+            stdlib_code_path,
+        )
         if spec is None or spec.loader is None:
             return None
         module = importlib.util.module_from_spec(spec)

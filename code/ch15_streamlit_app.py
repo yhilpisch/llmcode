@@ -3,7 +3,7 @@ Building a Large Language Model from Scratch
 — A Step-by-Step Guide Using Python and PyTorch
 
 (c) Dr. Yves J. Hilpisch (The Python Quants GmbH)
-AI-Powered by GPT-5.
+AI-powered by GPT-5.x.
 
 Streamlit app for sampling from an exported GPT bundle (Chapter 15).
 """
@@ -63,7 +63,10 @@ if st.button("Generate"):
         st.error(f"Failed to load bundle: {e}")
     else:
         if tok is None:
-            ids = torch.tensor([[c for c in prompt.encode("utf-8")]], dtype=torch.long)
+            ids = torch.tensor(
+                [[c for c in prompt.encode("utf-8")]],
+                dtype=torch.long,
+            )
             out = sample(
                 model,
                 ids,
@@ -74,7 +77,10 @@ if st.button("Generate"):
             )
             text = bytes(out[0].tolist()).decode("utf-8", errors="ignore")
         else:
-            ids = torch.tensor([tok.encode(prompt)], dtype=torch.long)
+            ids = torch.tensor(
+                [tok.encode(prompt)],
+                dtype=torch.long,
+            )
             out = sample(
                 model,
                 ids,
@@ -86,4 +92,3 @@ if st.button("Generate"):
             text = tok.decode(out[0].tolist())
         st.subheader("Output")
         st.write(text)
-

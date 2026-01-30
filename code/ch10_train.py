@@ -3,7 +3,7 @@ Building a Large Language Model from Scratch
 — A Step-by-Step Guide Using Python and PyTorch
 
 (c) Dr. Yves J. Hilpisch (The Python Quants GmbH)
-AI-Powered by GPT-5.
+AI-powered by GPT-5.x.
 
 Chapter 10: a compact training script for the GPT model.
 
@@ -48,8 +48,12 @@ def auto_device() -> str:
 def main() -> None:
     p = argparse.ArgumentParser(description="Train a tiny GPT (Chapter 10)")
     p.add_argument("--data", nargs="*", help="text file(s) to train on")
-    p.add_argument("--level", default="char", choices=["char", "word", "byte"],
-                   help="token level when using SimpleTokenizer; 'byte' forces byte-level")
+    p.add_argument(
+        "--level",
+        default="char",
+        choices=["char", "word", "byte"],
+        help="token level when using SimpleTokenizer; 'byte' forces byte-level",
+    )
     p.add_argument("--block-size", type=int, default=128)
     p.add_argument("--batch-size", type=int, default=64)
     p.add_argument("--epochs", type=int, default=1)

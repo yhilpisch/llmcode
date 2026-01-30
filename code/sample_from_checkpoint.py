@@ -3,7 +3,7 @@ Building a Large Language Model from Scratch
 — A Step-by-Step Guide Using Python and PyTorch
 
 (c) Dr. Yves J. Hilpisch (The Python Quants GmbH)
-AI-Powered by GPT-5.
+AI-powered by GPT-5.x.
 
 Sample text from a trained checkpoint (Chapter 11 companion CLI).
 
@@ -13,7 +13,12 @@ you can sample without extra tokenizer files.
 
 Examples
 --------
-(.venv) $ python code/sample_from_checkpoint.py   --ckpt checkpoints/ch10_gpt.pt --prompt "Philosophy is"   --max-new-tokens 120 --temperature 0.9 --top-p 0.95
+(.venv) $ python code/sample_from_checkpoint.py \
+  --ckpt checkpoints/ch10_gpt.pt \
+  --prompt "Philosophy is" \
+  --max-new-tokens 120 \
+  --temperature 0.9 \
+  --top-p 0.95
 
 Notes
 -----
@@ -58,10 +63,18 @@ def main(argv: Optional[list[str]] = None) -> None:
     p.add_argument("--top-p", type=float, default=0.0)
     p.add_argument("--device", default="auto")
     p.add_argument("--seed", type=int, default=0)
-    p.add_argument("--level", default="auto", choices=["auto", "byte", "char", "word"],
-                   help="tokenization level for prompt/decoding")
-    p.add_argument("--ref-text", nargs='*', default=[],
-                   help="text file(s) used to rebuild tokenizer for char/word levels")
+    p.add_argument(
+        "--level",
+        default="auto",
+        choices=["auto", "byte", "char", "word"],
+        help="tokenization level for prompt/decoding",
+    )
+    p.add_argument(
+        "--ref-text",
+        nargs="*",
+        default=[],
+        help="text file(s) used to rebuild tokenizer for char/word levels",
+    )
     args = p.parse_args(argv)
 
     torch.manual_seed(args.seed)
@@ -80,7 +93,11 @@ def main(argv: Optional[list[str]] = None) -> None:
 
     if level == "byte":
         prompt_bytes = args.prompt.encode("utf-8")
-        input_ids = torch.tensor([list(prompt_bytes)], dtype=torch.long, device=device)
+        input_ids = torch.tensor(
+            [list(prompt_bytes)],
+            dtype=torch.long,
+            device=device,
+        )
         out = sample(
             model,
             input_ids,
@@ -102,19 +119,38 @@ def main(argv: Optional[list[str]] = None) -> None:
                 token_to_id = {t: i for i, t in enumerate(id_to_token)}
                 pad_id = int(meta.get("pad_id", 0))
                 unk_id = int(meta.get("unk_id", 1))
-                vocab = Vocab(token_to_id=token_to_id, id_to_token=id_to_token, pad=pad_id, unk=unk_id)
+                vocab = Vocab(
+                    token_to_id=token_to_id,
+                    id_to_token=id_to_token,
+                    pad=pad_id,
+                    unk=unk_id,
+                )
                 tok = SimpleTokenizer(vocab=vocab, level=level)
         if tok is None:
             if not args.ref_text:
-                print("ERROR: provide --ref-text files to rebuild tokenizer for level=char/word.")
+                print(
+                    "ERROR: provide --ref-text files to rebuild tokenizer "
+                    "for level=char/word."
+                )
                 sys.exit(2)
-            ref = "\n".join(Path(p).read_text(encoding="utf-8") for p in args.ref_text)
+            ref = "\n".join(
+                Path(p).read_text(encoding="utf-8")
+                for p in args.ref_text
+            )
             tokens = SimpleTokenizer._split(ref, level)
             vocab = Vocab.build(tokens)
             tok = SimpleTokenizer(vocab=vocab, level=level)
             if len(vocab) != cfg.vocab_size:
-                print(f"WARNING: tokenizer vocab {len(vocab)} != model vocab {cfg.vocab_size}; decoding may be off.")
-        input_ids = torch.tensor([tok.encode(args.prompt)], dtype=torch.long, device=device)
+                print(
+                    "WARNING: tokenizer vocab "
+                    f"{len(vocab)} != model vocab {cfg.vocab_size}; "
+                    "decoding may be off."
+                )
+        input_ids = torch.tensor(
+            [tok.encode(args.prompt)],
+            dtype=torch.long,
+            device=device,
+        )
         out = sample(
             model,
             input_ids,

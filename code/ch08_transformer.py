@@ -3,7 +3,7 @@ Building a Large Language Model from Scratch
 — A Step-by-Step Guide Using Python and PyTorch
 
 (c) Dr. Yves J. Hilpisch (The Python Quants GmbH)
-AI-Powered by GPT-5.
+AI-powered by GPT-5.x.
 
 """
 
@@ -46,23 +46,27 @@ class MultiHeadAttention(nn.Module):
     def __init__(self, d_model: int, num_heads: int, dropout: float = 0.0):
         super().__init__()
         assert d_model % num_heads == 0, "d_model must be divisible by num_heads"
-        self.h = num_heads                                     # number of heads
-        self.d = d_model // num_heads                          # per‑head dim
-        self.qkv = nn.Linear(d_model, 3 * d_model, bias=False) # shared proj
-        self.out = nn.Linear(d_model, d_model, bias=False)     # output proj
+        self.h = num_heads  # number of heads
+        self.d = d_model // num_heads  # per‑head dim
+        self.qkv = nn.Linear(d_model, 3 * d_model, bias=False)  # shared proj
+        self.out = nn.Linear(d_model, d_model, bias=False)  # output proj
         self.drop = nn.Dropout(dropout)
 
-    def forward(self, x: torch.Tensor, mask: torch.Tensor | None = None) -> torch.Tensor:
-        B, T, Dm = x.shape                                     # batch, time, model dim
-        qkv = self.qkv(x)                                      # [B, T, 3*Dm]
-        q, k, v = qkv.chunk(3, dim=-1)                         # each [B, T, Dm]
+    def forward(
+        self,
+        x: torch.Tensor,
+        mask: torch.Tensor | None = None,
+    ) -> torch.Tensor:
+        B, T, Dm = x.shape  # batch, time, model dim
+        qkv = self.qkv(x)  # [B, T, 3*Dm]
+        q, k, v = qkv.chunk(3, dim=-1)  # each [B, T, Dm]
 
         # Split heads: [B,T,Dm] -> [B,H,T,Dh],
         # then put heads dimension before time.
         def split(t: torch.Tensor) -> torch.Tensor:
             return t.view(B, T, self.h, self.d).transpose(1, 2)
 
-        q, k, v = map(split, (q, k, v))                        # [B, H, T, Dh]
+        q, k, v = map(split, (q, k, v))  # [B, H, T, Dh]
 
         # Build [B, H, T, T] boolean mask (True = disallowed)
         mask_bool = None
@@ -112,10 +116,10 @@ class FeedForward(nn.Module):
     def __init__(self, d_model: int, d_ff: int, dropout: float = 0.0):
         super().__init__()
         self.net = nn.Sequential(
-            nn.Linear(d_model, d_ff),   # expand
-            nn.GELU(),                  # nonlinearity
+            nn.Linear(d_model, d_ff),  # expand
+            nn.GELU(),  # nonlinearity
             nn.Dropout(dropout),
-            nn.Linear(d_ff, d_model),   # project back
+            nn.Linear(d_ff, d_model),  # project back
             nn.Dropout(dropout),
         )
 
@@ -130,23 +134,39 @@ class Residual(nn.Module):
         super().__init__()
         self.norm = nn.LayerNorm(d_model)
 
-    def forward(self, x: torch.Tensor, sublayer: nn.Module, *args, **kwargs) -> torch.Tensor:
+    def forward(
+        self,
+        x: torch.Tensor,
+        sublayer: nn.Module,
+        *args,
+        **kwargs,
+    ) -> torch.Tensor:
         return x + sublayer(self.norm(x), *args, **kwargs)
 
 
 class TransformerBlock(nn.Module):
     """One pre‑norm transformer block: MHA + FFN with residuals."""
 
-    def __init__(self, d_model: int, num_heads: int, d_ff: int, dropout: float = 0.0):
+    def __init__(
+        self,
+        d_model: int,
+        num_heads: int,
+        d_ff: int,
+        dropout: float = 0.0,
+    ):
         super().__init__()
         self.mha = MultiHeadAttention(d_model, num_heads, dropout)
         self.ffn = FeedForward(d_model, d_ff, dropout)
         self.res1 = Residual(d_model)
         self.res2 = Residual(d_model)
 
-    def forward(self, x: torch.Tensor, mask: torch.Tensor | None = None) -> torch.Tensor:
-        x = self.res1(x, self.mha, mask)   # attend + residual
-        x = self.res2(x, self.ffn)         # think (FFN) + residual
+    def forward(
+        self,
+        x: torch.Tensor,
+        mask: torch.Tensor | None = None,
+    ) -> torch.Tensor:
+        x = self.res1(x, self.mha, mask)  # attend + residual
+        x = self.res2(x, self.ffn)  # think (FFN) + residual
         return x
 
 

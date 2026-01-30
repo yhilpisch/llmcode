@@ -3,7 +3,7 @@ Building a Large Language Model from Scratch
 — A Step-by-Step Guide Using Python and PyTorch
 
 (c) Dr. Yves J. Hilpisch (The Python Quants GmbH)
-AI-Powered by GPT-5.
+AI-powered by GPT-5.x.
 
 FastAPI app serving a minimal /generate endpoint (Chapter 15).
 """
@@ -73,7 +73,10 @@ def generate(req: GenerateReq):
     if model is None:
         return {"error": "model not loaded; place model_bundle.pt next to the app"}
     if tok is None:
-        ids = torch.tensor([[c for c in req.prompt.encode("utf-8")]], dtype=torch.long)
+        ids = torch.tensor(
+            [[c for c in req.prompt.encode("utf-8")]],
+            dtype=torch.long,
+        )
         out = sample(
             model,
             ids,
@@ -84,7 +87,10 @@ def generate(req: GenerateReq):
         )
         text = bytes(out[0].tolist()).decode("utf-8", errors="ignore")
     else:
-        ids = torch.tensor([tok.encode(req.prompt)], dtype=torch.long)
+        ids = torch.tensor(
+            [tok.encode(req.prompt)],
+            dtype=torch.long,
+        )
         out = sample(
             model,
             ids,
@@ -95,4 +101,3 @@ def generate(req: GenerateReq):
         )
         text = tok.decode(out[0].tolist())
     return {"text": text}
-

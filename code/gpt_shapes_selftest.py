@@ -3,7 +3,7 @@ Building a Large Language Model from Scratch
 — A Step-by-Step Guide Using Python and PyTorch
 
 (c) Dr. Yves J. Hilpisch (The Python Quants GmbH)
-AI-Powered by GPT-5.
+AI-powered by GPT-5.x.
 
 Self-test: verify GPT forward shapes and mask broadcasting.
 
@@ -26,7 +26,14 @@ from ch09_gpt import GPT, GPTConfig  # type: ignore
 
 
 def main() -> None:
-    cfg = GPTConfig(vocab_size=256, block_size=8, d_model=64, n_head=4, n_layer=2, d_ff=128)
+    cfg = GPTConfig(
+        vocab_size=256,
+        block_size=8,
+        d_model=64,
+        n_head=4,
+        n_layer=2,
+        d_ff=128,
+    )
     model = GPT(cfg)
     B, T = 2, 8
     x = torch.randint(0, cfg.vocab_size, (B, T))
@@ -44,4 +51,3 @@ def main() -> None:
 
 if __name__ == "__main__":
     main()
-
